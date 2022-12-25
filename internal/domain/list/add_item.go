@@ -1,6 +1,6 @@
 package list
 
-import "github.com/narcisobenigno/grocery-go/pkg/es"
+import "github.com/narcisobenigno/none-list/pkg/es"
 
 type AddItem struct {
 	ListID es.AggregateID

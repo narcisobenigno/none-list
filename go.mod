@@ -1,4 +1,4 @@
-module github.com/narcisobenigno/grocery-go
+module github.com/narcisobenigno/none-list
 
 go 1.19
 
