@@ -21,7 +21,7 @@ func TestProductSuite(t *testing.T) {
 	suite.Run(t, s)
 }
 
-func (s *CreateListSuite) Shows_interest_in_a_product() {
+func (s *CreateListSuite) TestCreatesList() {
 	store := es.NewInMemoryEventStore()
 	subject := list.NewBus(store)
 

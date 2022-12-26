@@ -19,7 +19,7 @@ func TestEventStoreSuite(t *testing.T) {
 	suite.Run(t, s)
 }
 
-func (s *EventStoreSuite) Test_events_by_aggregate_id() {
+func (s *EventStoreSuite) TestEventsAggregateByID() {
 	store := es.NewInMemoryEventStore()
 
 	err := store.Write([]es.Event{
