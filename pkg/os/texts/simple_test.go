@@ -1,9 +1,9 @@
-package text_test
+package texts_test
 
 import (
 	"testing"
 
-	"github.com/narcisobenigno/none-list/pkg/os/text"
+	"github.com/narcisobenigno/none-list/pkg/os/texts"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 )
@@ -22,14 +22,14 @@ func TestSimpleSuite(t *testing.T) {
 func (s *SimpleSuite) TestEquality() {
 	s.Run("different texts", func() {
 		s.NotEqual(
-			text.New(" a text "),
-			text.New("a text"),
+			texts.New(" a text "),
+			texts.New("a text"),
 		)
 	})
 	s.Run("equal texts", func() {
 		s.Equal(
-			text.New("a text"),
-			text.New("a text"),
+			texts.New("a text"),
+			texts.New("a text"),
 		)
 	})
 }
@@ -37,11 +37,11 @@ func (s *SimpleSuite) TestEquality() {
 func (s *SimpleSuite) TestString() {
 	s.Equal(
 		" a text ",
-		text.New(" a text ").String(),
+		texts.New(" a text ").String(),
 	)
 }
 
 func (s *SimpleSuite) TestEmpty() {
-	s.True(text.New("").Empty())
-	s.False(text.New(" ").Empty())
+	s.True(texts.New("").Empty())
+	s.False(texts.New(" ").Empty())
 }

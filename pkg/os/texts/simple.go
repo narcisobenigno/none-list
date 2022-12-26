@@ -1,4 +1,4 @@
-package text
+package texts
 
 type Simple struct {
 	text string
