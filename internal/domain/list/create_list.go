@@ -2,19 +2,19 @@ package list
 
 import "github.com/narcisobenigno/none-list/pkg/es"
 
-type AddItem struct {
-	ListID es.AggregateID
-	ID     string
+type Create struct {
+	ID   es.AggregateID
+	Name Name
 }
 
-func (a AddItem) AggregateName() string {
+func (a Create) AggregateName() string {
 	return "LIST"
 }
 
-func (a AddItem) AggregateID() es.AggregateID {
-	return a.ListID
+func (a Create) AggregateID() es.AggregateID {
+	return a.ID
 }
 
-func (a AddItem) Type() string {
+func (a Create) Type() string {
 	return "ADD_ITEM"
 }

@@ -10,22 +10,25 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
-type ProductSuite struct {
+type CreateListSuite struct {
 	*require.Assertions
 	suite.Suite
 }
 
 func TestProductSuite(t *testing.T) {
-	s := &ProductSuite{}
+	s := &CreateListSuite{}
 	s.Assertions = require.New(t)
 	suite.Run(t, s)
 }
 
-func (s *ProductSuite) Shows_interest_in_a_product() {
+func (s *CreateListSuite) Shows_interest_in_a_product() {
 	store := es.NewInMemoryEventStore()
 	subject := list.NewBus(store)
 
-	result := subject.Execute(&list.AddItem{})
+	result := subject.Execute(&list.Create{
+		ID:   es.NewDeterministicAggregateID("list-id-1"),
+		Name: list.MustParseName("List name"),
+	})
 
 	s.Equal(results.Success(), result)
 }
