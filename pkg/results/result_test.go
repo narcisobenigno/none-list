@@ -32,3 +32,9 @@ func (s *ResultSuite) TestFailed() {
 	s.False(results.Success().Failed())
 	s.True(results.Failed("Context", "failed by").Failed())
 }
+
+func (s *ResultSuite) TestMessage() {
+	s.Equal("", results.Success().Message())
+	s.Equal("Context: fail message", results.Failed("Context", "fail message").Message())
+	s.Equal("Context: fail message", results.Failed(" Context ", " fail message ").Message())
+}
