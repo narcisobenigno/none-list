@@ -37,3 +37,9 @@ func (s *SpaceTrimmedSuite) TestString() {
 		text.NewSpaceTrimmed(" text with space trimmed ").String(),
 	)
 }
+
+func (s *SpaceTrimmedSuite) TestEmpty() {
+	s.True(text.NewSpaceTrimmed("").Empty())
+	s.True(text.NewSpaceTrimmed(" ").Empty())
+	s.False(text.NewSpaceTrimmed(" a ").Empty())
+}

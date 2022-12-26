@@ -15,3 +15,7 @@ func NewSpaceTrimmed(text string) SpaceTrimmed {
 func (t SpaceTrimmed) String() string {
 	return t.text
 }
+
+func (t SpaceTrimmed) Empty() bool {
+	return len(t.String()) == 0
+}
