@@ -3,19 +3,19 @@ package text
 import "strings"
 
 type SpaceTrimmed struct {
-	text string
+	text Text
 }
 
 func NewSpaceTrimmed(text string) SpaceTrimmed {
 	return SpaceTrimmed{
-		text: strings.TrimSpace(text),
+		text: New(strings.TrimSpace(text)),
 	}
 }
 
 func (t SpaceTrimmed) String() string {
-	return t.text
+	return t.text.String()
 }
 
 func (t SpaceTrimmed) Empty() bool {
-	return len(t.String()) == 0
+	return t.text.Empty()
 }
