@@ -66,6 +66,60 @@ func (s *EventStoreSuite) TestEventsAggregateByID() {
 	)
 }
 
+func (s *EventStoreSuite) TestInMemoryReturnsAllEvents() {
+	store := es.NewInMemoryEventStore()
+
+	err := store.Write([]es.Event{
+		&somethingHappened{
+			DataID:  es.NewDeterministicAggregateID("something-happened-1"),
+			What:    "something happened",
+			Version: 1,
+		},
+		&somethingHappened{
+			DataID:  es.NewDeterministicAggregateID("something-happened-2"),
+			What:    "something happened 2",
+			Version: 1,
+		},
+		&somethingHappened{
+			DataID:  es.NewDeterministicAggregateID("something-happened-1"),
+			What:    "something happened again",
+			Version: 2,
+		},
+	})
+	s.NoError(err)
+
+	events := store.All()
+	s.Equal(
+		[]es.StoredEvent{
+			{
+				Position: 1,
+				Event: &somethingHappened{
+					DataID:  es.NewDeterministicAggregateID("something-happened-1"),
+					What:    "something happened",
+					Version: 1,
+				},
+			},
+			{
+				Position: 2,
+				Event: &somethingHappened{
+					DataID:  es.NewDeterministicAggregateID("something-happened-2"),
+					What:    "something happened 2",
+					Version: 1,
+				},
+			},
+			{
+				Position: 3,
+				Event: &somethingHappened{
+					DataID:  es.NewDeterministicAggregateID("something-happened-1"),
+					What:    "something happened again",
+					Version: 2,
+				},
+			},
+		},
+		events,
+	)
+}
+
 type somethingHappened struct {
 	DataID  es.AggregateID
 	What    string
