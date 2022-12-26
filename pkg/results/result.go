@@ -15,3 +15,7 @@ func Failed(context, message string) Result {
 func newResult(fails map[string]string) Result {
 	return Result{fails: fails}
 }
+
+func (r Result) Failed() bool {
+	return len(r.fails) > 0
+}
