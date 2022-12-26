@@ -66,3 +66,8 @@ func (s *NameSuite) TestMustParse() {
 		list.MustParseName("  ")
 	})
 }
+
+func (s *NameSuite) TestProvided() {
+	s.True(list.MustParseName("List name").Provided())
+	s.False(list.Name{}.Provided())
+}

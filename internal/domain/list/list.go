@@ -17,6 +17,10 @@ func (l list) handle(cmd es.Cmd) ([]es.Event, results.Result) {
 }
 
 func create(command *Create) ([]es.Event, results.Result) {
+	if !command.Name.Provided() {
+		return []es.Event{}, results.Failed("List", "name not provided")
+	}
+
 	return []es.Event{
 		&Created{
 			ID:   command.ID,

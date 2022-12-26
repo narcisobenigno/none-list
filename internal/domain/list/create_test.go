@@ -45,3 +45,17 @@ func (s *CreateSuite) TestCreatesList() {
 		store.All(),
 	)
 }
+
+func (s *CreateSuite) TestFailsWhenNameNotProvided() {
+	store := es.NewInMemoryEventStore()
+	subject := list.NewBus(store)
+
+	result, err := subject.Execute(&list.Create{
+		ID:   es.NewDeterministicAggregateID("list-id-1"),
+		Name: list.Name{},
+	})
+	s.NoError(err)
+
+	s.Equal(results.Failed("List", "name not provided"), result)
+	s.Empty(store.All())
+}

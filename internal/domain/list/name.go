@@ -26,3 +26,7 @@ func MustParseName(name string) Name {
 
 	return parsed
 }
+
+func (n Name) Provided() bool {
+	return !(n == Name{})
+}
