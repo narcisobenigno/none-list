@@ -1,24 +1,28 @@
 package list
 
 import (
-	"errors"
-
 	"github.com/narcisobenigno/none-list/pkg/os/texts"
+	"github.com/narcisobenigno/none-list/pkg/results"
 )
 
 type Name struct {
 	name texts.Text
 }
 
-func ParseName(name string) (Name, error) {
+func ParseName(name string) (Name, results.Result) {
 	trimmedName := texts.NewSpaceTrimmed(name)
 	if trimmedName.Empty() {
-		return Name{}, errors.New("list name cannot be empty")
+		return Name{}, results.Failed("List", "name cannot be empty")
 	}
 
-	return Name{name: trimmedName}, nil
+	return Name{name: trimmedName}, results.Success()
 }
 
 func MustParseName(name string) Name {
-	return Name{}
+	parsed, result := ParseName(name)
+	if result.Failed() {
+		panic(result.Message())
+	}
+
+	return parsed
 }
