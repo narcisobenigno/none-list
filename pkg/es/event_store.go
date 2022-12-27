@@ -47,13 +47,7 @@ func (i *InMemoryEventStore) Write(events []Event) error {
 	i.mutex.Lock()
 	defer i.mutex.Unlock()
 
-	storeCopy := map[AggregateID]map[uint64]StoredEvent{}
-	for aggregateID, versionEvent := range i.store {
-		storeCopy[aggregateID] = map[uint64]StoredEvent{}
-		for version, event := range versionEvent {
-			storeCopy[aggregateID][version] = event
-		}
-	}
+	storeCopy := i.storeCopy()
 
 	for _, event := range events {
 		if storeCopy[event.AggregateID()] == nil {
@@ -73,6 +67,17 @@ func (i *InMemoryEventStore) Write(events []Event) error {
 	i.store = storeCopy
 
 	return nil
+}
+
+func (i *InMemoryEventStore) storeCopy() map[AggregateID]map[uint64]StoredEvent {
+	storeCopy := map[AggregateID]map[uint64]StoredEvent{}
+	for aggregateID, versionEvent := range i.store {
+		storeCopy[aggregateID] = map[uint64]StoredEvent{}
+		for version, event := range versionEvent {
+			storeCopy[aggregateID][version] = event
+		}
+	}
+	return storeCopy
 }
 
 func (i *InMemoryEventStore) All() []StoredEvent {
