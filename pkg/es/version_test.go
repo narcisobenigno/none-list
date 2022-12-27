@@ -69,3 +69,10 @@ func (s *VersionSuite) TestMustParse() {
 		es.MustParseVersion(0)
 	})
 }
+
+func (s *VersionSuite) TestInitialVersion() {
+	s.Equal(
+		es.MustParseVersion(1),
+		es.InitialVersion(),
+	)
+}
