@@ -5,8 +5,9 @@ import (
 )
 
 type Created struct {
-	ID   es.AggregateID
-	Name Name
+	ID      es.AggregateID
+	Name    Name
+	Version uint64
 }
 
 func (c Created) AggregateID() es.AggregateID {
@@ -19,6 +20,5 @@ func (c Created) AggregateName() string {
 }
 
 func (c Created) AggregateVersion() uint64 {
-	//TODO implement me
-	panic("implement me")
+	return c.Version
 }
