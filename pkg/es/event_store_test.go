@@ -26,17 +26,17 @@ func (s *EventStoreSuite) TestEventsAggregateByID() {
 		&somethingHappened{
 			DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 			What:    "something happened",
-			Version: 1,
+			Version: es.MustParseVersion(1),
 		},
 		&somethingHappened{
 			DataID:  es.NewDeterministicAggregateID("something-happened-2"),
 			What:    "something happened 2",
-			Version: 1,
+			Version: es.MustParseVersion(1),
 		},
 		&somethingHappened{
 			DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 			What:    "something happened again",
-			Version: 2,
+			Version: es.MustParseVersion(2),
 		},
 	})
 	s.NoError(err)
@@ -50,7 +50,7 @@ func (s *EventStoreSuite) TestEventsAggregateByID() {
 				Event: &somethingHappened{
 					DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 					What:    "something happened",
-					Version: 1,
+					Version: es.MustParseVersion(1),
 				},
 			},
 			{
@@ -58,7 +58,7 @@ func (s *EventStoreSuite) TestEventsAggregateByID() {
 				Event: &somethingHappened{
 					DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 					What:    "something happened again",
-					Version: 2,
+					Version: es.MustParseVersion(2),
 				},
 			},
 		},
@@ -73,17 +73,17 @@ func (s *EventStoreSuite) TestInMemoryReturnsAllEvents() {
 		&somethingHappened{
 			DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 			What:    "something happened",
-			Version: 1,
+			Version: es.MustParseVersion(1),
 		},
 		&somethingHappened{
 			DataID:  es.NewDeterministicAggregateID("something-happened-2"),
 			What:    "something happened 2",
-			Version: 1,
+			Version: es.MustParseVersion(1),
 		},
 		&somethingHappened{
 			DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 			What:    "something happened again",
-			Version: 2,
+			Version: es.MustParseVersion(2),
 		},
 	})
 	s.NoError(err)
@@ -96,7 +96,7 @@ func (s *EventStoreSuite) TestInMemoryReturnsAllEvents() {
 				Event: &somethingHappened{
 					DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 					What:    "something happened",
-					Version: 1,
+					Version: es.MustParseVersion(1),
 				},
 			},
 			{
@@ -104,7 +104,7 @@ func (s *EventStoreSuite) TestInMemoryReturnsAllEvents() {
 				Event: &somethingHappened{
 					DataID:  es.NewDeterministicAggregateID("something-happened-2"),
 					What:    "something happened 2",
-					Version: 1,
+					Version: es.MustParseVersion(1),
 				},
 			},
 			{
@@ -112,7 +112,7 @@ func (s *EventStoreSuite) TestInMemoryReturnsAllEvents() {
 				Event: &somethingHappened{
 					DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 					What:    "something happened again",
-					Version: 2,
+					Version: es.MustParseVersion(2),
 				},
 			},
 		},
@@ -127,17 +127,17 @@ func (s *EventStoreSuite) TestReturnsErrorWhenAggregateByID() {
 		&somethingHappened{
 			DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 			What:    "something happened",
-			Version: 1,
+			Version: es.MustParseVersion(1),
 		},
 		&somethingHappened{
 			DataID:  es.NewDeterministicAggregateID("something-happened-2"),
 			What:    "something happened 2",
-			Version: 1,
+			Version: es.MustParseVersion(1),
 		},
 		&somethingHappened{
 			DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 			What:    "something happened again",
-			Version: 2,
+			Version: es.MustParseVersion(2),
 		},
 	})
 	s.NoError(err)
@@ -146,12 +146,12 @@ func (s *EventStoreSuite) TestReturnsErrorWhenAggregateByID() {
 		&somethingHappened{
 			DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 			What:    "existing version",
-			Version: 1,
+			Version: es.MustParseVersion(1),
 		},
 		&somethingHappened{
 			DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 			What:    "non existing, but should be ignored anyway since the other event failed",
-			Version: 3,
+			Version: es.MustParseVersion(3),
 		},
 	})
 	s.EqualError(err, "optimistic lock violation")
@@ -164,7 +164,7 @@ func (s *EventStoreSuite) TestReturnsErrorWhenAggregateByID() {
 				Event: &somethingHappened{
 					DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 					What:    "something happened",
-					Version: 1,
+					Version: es.MustParseVersion(1),
 				},
 			},
 			{
@@ -172,7 +172,7 @@ func (s *EventStoreSuite) TestReturnsErrorWhenAggregateByID() {
 				Event: &somethingHappened{
 					DataID:  es.NewDeterministicAggregateID("something-happened-2"),
 					What:    "something happened 2",
-					Version: 1,
+					Version: es.MustParseVersion(1),
 				},
 			},
 			{
@@ -180,7 +180,7 @@ func (s *EventStoreSuite) TestReturnsErrorWhenAggregateByID() {
 				Event: &somethingHappened{
 					DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 					What:    "something happened again",
-					Version: 2,
+					Version: es.MustParseVersion(2),
 				},
 			},
 		},
@@ -191,7 +191,7 @@ func (s *EventStoreSuite) TestReturnsErrorWhenAggregateByID() {
 type somethingHappened struct {
 	DataID  es.AggregateID
 	What    string
-	Version uint64
+	Version es.Version
 }
 
 func (s somethingHappened) AggregateID() es.AggregateID {
@@ -202,6 +202,6 @@ func (s somethingHappened) AggregateName() string {
 	return "SOMETHING"
 }
 
-func (s somethingHappened) AggregateVersion() uint64 {
+func (s somethingHappened) AggregateVersion() es.Version {
 	return s.Version
 }

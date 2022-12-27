@@ -23,8 +23,9 @@ func create(command *Create) ([]es.Event, results.Result) {
 
 	return []es.Event{
 		&Created{
-			ID:   command.ID,
-			Name: command.Name,
+			ID:      command.ID,
+			Name:    command.Name,
+			Version: es.InitialVersion(),
 		},
 	}, results.Success()
 }

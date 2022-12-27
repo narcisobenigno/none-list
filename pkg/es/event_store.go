@@ -17,14 +17,14 @@ type StoredEvent struct {
 }
 
 type InMemoryEventStore struct {
-	store    map[AggregateID]map[uint64]StoredEvent
+	store    map[AggregateID]map[Version]StoredEvent
 	position uint64
 	mutex    sync.Mutex
 }
 
 func NewInMemoryEventStore() *InMemoryEventStore {
 	return &InMemoryEventStore{
-		store:    map[AggregateID]map[uint64]StoredEvent{},
+		store:    map[AggregateID]map[Version]StoredEvent{},
 		position: 1,
 		mutex:    sync.Mutex{},
 	}
@@ -51,7 +51,7 @@ func (i *InMemoryEventStore) Write(events []Event) error {
 
 	for _, event := range events {
 		if storeCopy[event.AggregateID()] == nil {
-			storeCopy[event.AggregateID()] = map[uint64]StoredEvent{}
+			storeCopy[event.AggregateID()] = map[Version]StoredEvent{}
 		}
 		if _, found := storeCopy[event.AggregateID()][event.AggregateVersion()]; found {
 			return errors.New("optimistic lock violation")
@@ -69,10 +69,10 @@ func (i *InMemoryEventStore) Write(events []Event) error {
 	return nil
 }
 
-func (i *InMemoryEventStore) storeCopy() map[AggregateID]map[uint64]StoredEvent {
-	storeCopy := map[AggregateID]map[uint64]StoredEvent{}
+func (i *InMemoryEventStore) storeCopy() map[AggregateID]map[Version]StoredEvent {
+	storeCopy := map[AggregateID]map[Version]StoredEvent{}
 	for aggregateID, versionEvent := range i.store {
-		storeCopy[aggregateID] = map[uint64]StoredEvent{}
+		storeCopy[aggregateID] = map[Version]StoredEvent{}
 		for version, event := range versionEvent {
 			storeCopy[aggregateID][version] = event
 		}

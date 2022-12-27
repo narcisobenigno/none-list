@@ -7,7 +7,7 @@ import (
 type Created struct {
 	ID      es.AggregateID
 	Name    Name
-	Version uint64
+	Version es.Version
 }
 
 func (c Created) AggregateID() es.AggregateID {
@@ -19,6 +19,6 @@ func (c Created) AggregateName() string {
 	panic("implement me")
 }
 
-func (c Created) AggregateVersion() uint64 {
+func (c Created) AggregateVersion() es.Version {
 	return c.Version
 }

@@ -37,8 +37,9 @@ func (s *CreateSuite) TestCreatesList() {
 			{
 				Position: 1,
 				Event: &list.Created{
-					ID:   es.NewDeterministicAggregateID("list-id-1"),
-					Name: list.MustParseName("List name 1"),
+					ID:      es.NewDeterministicAggregateID("list-id-1"),
+					Name:    list.MustParseName("List name 1"),
+					Version: es.MustParseVersion(1),
 				},
 			},
 		},
