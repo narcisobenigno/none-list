@@ -1,6 +1,7 @@
 package es
 
 import (
+	"errors"
 	"sort"
 	"sync"
 )
@@ -35,22 +36,42 @@ func (i *InMemoryEventStore) EventsByAggregateID(aggregateID AggregateID) ([]Sto
 	for _, event := range aggregateEvents {
 		storedEvents = append(storedEvents, event)
 	}
+	sort.Slice(storedEvents, func(i, j int) bool {
+		return storedEvents[i].Position < storedEvents[j].Position
+	})
+
 	return storedEvents, nil
 }
 
 func (i *InMemoryEventStore) Write(events []Event) error {
 	i.mutex.Lock()
-	for _, event := range events {
-		if i.store[event.AggregateID()] == nil {
-			i.store[event.AggregateID()] = map[uint64]StoredEvent{}
+	defer i.mutex.Unlock()
+
+	storeCopy := map[AggregateID]map[uint64]StoredEvent{}
+	for aggregateID, versionEvent := range i.store {
+		storeCopy[aggregateID] = map[uint64]StoredEvent{}
+		for version, event := range versionEvent {
+			storeCopy[aggregateID][version] = event
 		}
-		i.store[event.AggregateID()][event.AggregateVersion()] = StoredEvent{
+	}
+
+	for _, event := range events {
+		if storeCopy[event.AggregateID()] == nil {
+			storeCopy[event.AggregateID()] = map[uint64]StoredEvent{}
+		}
+		if _, found := storeCopy[event.AggregateID()][event.AggregateVersion()]; found {
+			return errors.New("optimistic lock violation")
+		}
+
+		storeCopy[event.AggregateID()][event.AggregateVersion()] = StoredEvent{
 			Position: i.position,
 			Event:    event,
 		}
 		i.position += 1
 	}
-	i.mutex.Unlock()
+
+	i.store = storeCopy
+
 	return nil
 }
 

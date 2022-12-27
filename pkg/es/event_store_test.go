@@ -120,6 +120,74 @@ func (s *EventStoreSuite) TestInMemoryReturnsAllEvents() {
 	)
 }
 
+func (s *EventStoreSuite) TestReturnsErrorWhenAggregateByID() {
+	store := es.NewInMemoryEventStore()
+
+	err := store.Write([]es.Event{
+		&somethingHappened{
+			DataID:  es.NewDeterministicAggregateID("something-happened-1"),
+			What:    "something happened",
+			Version: 1,
+		},
+		&somethingHappened{
+			DataID:  es.NewDeterministicAggregateID("something-happened-2"),
+			What:    "something happened 2",
+			Version: 1,
+		},
+		&somethingHappened{
+			DataID:  es.NewDeterministicAggregateID("something-happened-1"),
+			What:    "something happened again",
+			Version: 2,
+		},
+	})
+	s.NoError(err)
+
+	err = store.Write([]es.Event{
+		&somethingHappened{
+			DataID:  es.NewDeterministicAggregateID("something-happened-1"),
+			What:    "existing version",
+			Version: 1,
+		},
+		&somethingHappened{
+			DataID:  es.NewDeterministicAggregateID("something-happened-1"),
+			What:    "non existing, but should be ignored anyway since the other event failed",
+			Version: 3,
+		},
+	})
+	s.EqualError(err, "optimistic lock violation")
+
+	events := store.All()
+	s.Equal(
+		[]es.StoredEvent{
+			{
+				Position: 1,
+				Event: &somethingHappened{
+					DataID:  es.NewDeterministicAggregateID("something-happened-1"),
+					What:    "something happened",
+					Version: 1,
+				},
+			},
+			{
+				Position: 2,
+				Event: &somethingHappened{
+					DataID:  es.NewDeterministicAggregateID("something-happened-2"),
+					What:    "something happened 2",
+					Version: 1,
+				},
+			},
+			{
+				Position: 3,
+				Event: &somethingHappened{
+					DataID:  es.NewDeterministicAggregateID("something-happened-1"),
+					What:    "something happened again",
+					Version: 2,
+				},
+			},
+		},
+		events,
+	)
+}
+
 type somethingHappened struct {
 	DataID  es.AggregateID
 	What    string
