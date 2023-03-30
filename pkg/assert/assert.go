@@ -10,3 +10,9 @@ func Must[T any](value T, err error) T {
 	NoError(err)
 	return value
 }
+
+func True(truthy bool, msg string) {
+	if !truthy {
+		panic(msg)
+	}
+}
