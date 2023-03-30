@@ -1,7 +1,7 @@
 package list
 
 import (
-	"github.com/narcisobenigno/none-list/pkg/es"
+	"github.com/narcisobenigno/grocery-go/pkg/es"
 )
 
 type Created struct {

@@ -1,8 +1,8 @@
 package list
 
 import (
-	"github.com/narcisobenigno/none-list/pkg/es"
-	"github.com/narcisobenigno/none-list/pkg/results"
+	"github.com/narcisobenigno/grocery-go/pkg/es"
+	"github.com/narcisobenigno/grocery-go/pkg/results"
 )
 
 type Bus struct {

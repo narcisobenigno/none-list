@@ -3,7 +3,7 @@ package results_test
 import (
 	"testing"
 
-	"github.com/narcisobenigno/none-list/pkg/results"
+	"github.com/narcisobenigno/grocery-go/pkg/results"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 )

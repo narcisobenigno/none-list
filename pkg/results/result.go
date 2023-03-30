@@ -3,7 +3,7 @@ package results
 import (
 	"fmt"
 
-	"github.com/narcisobenigno/none-list/pkg/os/texts"
+	"github.com/narcisobenigno/grocery-go/pkg/os/texts"
 )
 
 type Result struct {

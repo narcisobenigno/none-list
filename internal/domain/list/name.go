@@ -1,8 +1,8 @@
 package list
 
 import (
-	"github.com/narcisobenigno/none-list/pkg/os/texts"
-	"github.com/narcisobenigno/none-list/pkg/results"
+	"github.com/narcisobenigno/grocery-go/pkg/os/texts"
+	"github.com/narcisobenigno/grocery-go/pkg/results"
 )
 
 type Name struct {

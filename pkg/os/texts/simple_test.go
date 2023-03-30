@@ -3,7 +3,7 @@ package texts_test
 import (
 	"testing"
 
-	"github.com/narcisobenigno/none-list/pkg/os/texts"
+	"github.com/narcisobenigno/grocery-go/pkg/os/texts"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 )

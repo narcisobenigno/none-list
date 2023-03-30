@@ -1,6 +1,6 @@
 package es
 
-import "github.com/narcisobenigno/none-list/pkg/results"
+import "github.com/narcisobenigno/grocery-go/pkg/results"
 
 type Version struct {
 	version uint
