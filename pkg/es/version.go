@@ -1,6 +1,9 @@
 package es
 
-import "github.com/narcisobenigno/grocery-go/pkg/results"
+import (
+	"github.com/narcisobenigno/grocery-go/pkg/assert"
+	"github.com/narcisobenigno/grocery-go/pkg/results"
+)
 
 type Version struct {
 	version uint
@@ -15,9 +18,8 @@ func ParseVersion(version uint) (Version, results.Result) {
 
 func MustParseVersion(version uint) Version {
 	parsedVersion, result := ParseVersion(version)
-	if result.Failed() {
-		panic(result.Message())
-	}
+
+	assert.True(!result.Failed(), result.Message())
 
 	return parsedVersion
 }
