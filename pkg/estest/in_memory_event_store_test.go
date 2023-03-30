@@ -1,14 +1,15 @@
-package es_test
+package estest_test
 
 import (
 	"testing"
 
 	"github.com/narcisobenigno/grocery-go/pkg/es"
+	"github.com/narcisobenigno/grocery-go/pkg/estest"
 	"github.com/stretchr/testify/require"
 )
 
 func TestEventsAggregateByID(t *testing.T) {
-	store := es.NewInMemoryEventStore()
+	store := estest.NewInMemoryEventStore()
 
 	err := store.Write([]es.Event{
 		&somethingHappened{
@@ -55,7 +56,7 @@ func TestEventsAggregateByID(t *testing.T) {
 }
 
 func TestInMemoryReturnsAllEvents(t *testing.T) {
-	store := es.NewInMemoryEventStore()
+	store := estest.NewInMemoryEventStore()
 
 	err := store.Write([]es.Event{
 		&somethingHappened{
@@ -109,7 +110,7 @@ func TestInMemoryReturnsAllEvents(t *testing.T) {
 }
 
 func TestReturnsErrorWhenAggregateByID(t *testing.T) {
-	store := es.NewInMemoryEventStore()
+	store := estest.NewInMemoryEventStore()
 
 	err := store.Write([]es.Event{
 		&somethingHappened{

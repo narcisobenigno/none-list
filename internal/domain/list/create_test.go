@@ -5,6 +5,7 @@ import (
 
 	"github.com/narcisobenigno/grocery-go/internal/domain/list"
 	"github.com/narcisobenigno/grocery-go/pkg/es"
+	"github.com/narcisobenigno/grocery-go/pkg/estest"
 	"github.com/narcisobenigno/grocery-go/pkg/results"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -22,7 +23,7 @@ func TestProductSuite(t *testing.T) {
 }
 
 func (s *CreateSuite) TestCreatesList() {
-	store := es.NewInMemoryEventStore()
+	store := estest.NewInMemoryEventStore()
 	subject := list.NewBus(store)
 
 	result, err := subject.Execute(&list.Create{
@@ -48,7 +49,7 @@ func (s *CreateSuite) TestCreatesList() {
 }
 
 func (s *CreateSuite) TestFailsWhenNameNotProvided() {
-	store := es.NewInMemoryEventStore()
+	store := estest.NewInMemoryEventStore()
 	subject := list.NewBus(store)
 
 	result, err := subject.Execute(&list.Create{
