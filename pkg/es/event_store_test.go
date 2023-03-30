@@ -3,23 +3,11 @@ package es_test
 import (
 	"testing"
 
-	"github.com/narcisobenigno/none-list/pkg/es"
+	"github.com/narcisobenigno/grocery-go/pkg/es"
 	"github.com/stretchr/testify/require"
-	"github.com/stretchr/testify/suite"
 )
 
-type EventStoreSuite struct {
-	*require.Assertions
-	suite.Suite
-}
-
-func TestEventStoreSuite(t *testing.T) {
-	s := new(EventStoreSuite)
-	s.Assertions = require.New(t)
-	suite.Run(t, s)
-}
-
-func (s *EventStoreSuite) TestEventsAggregateByID() {
+func TestEventsAggregateByID(t *testing.T) {
 	store := es.NewInMemoryEventStore()
 
 	err := store.Write([]es.Event{
@@ -39,11 +27,11 @@ func (s *EventStoreSuite) TestEventsAggregateByID() {
 			Version: es.MustParseVersion(2),
 		},
 	})
-	s.NoError(err)
+	require.NoError(t, err)
 
 	events, err := store.EventsByAggregateID(es.NewDeterministicAggregateID("something-happened-1"))
-	s.NoError(err)
-	s.Equal(
+	require.NoError(t, err)
+	require.Equal(t,
 		[]es.StoredEvent{
 			{
 				Position: 1,
@@ -66,7 +54,7 @@ func (s *EventStoreSuite) TestEventsAggregateByID() {
 	)
 }
 
-func (s *EventStoreSuite) TestInMemoryReturnsAllEvents() {
+func TestInMemoryReturnsAllEvents(t *testing.T) {
 	store := es.NewInMemoryEventStore()
 
 	err := store.Write([]es.Event{
@@ -86,10 +74,10 @@ func (s *EventStoreSuite) TestInMemoryReturnsAllEvents() {
 			Version: es.MustParseVersion(2),
 		},
 	})
-	s.NoError(err)
+	require.NoError(t, err)
 
 	events := store.All()
-	s.Equal(
+	require.Equal(t,
 		[]es.StoredEvent{
 			{
 				Position: 1,
@@ -120,7 +108,7 @@ func (s *EventStoreSuite) TestInMemoryReturnsAllEvents() {
 	)
 }
 
-func (s *EventStoreSuite) TestReturnsErrorWhenAggregateByID() {
+func TestReturnsErrorWhenAggregateByID(t *testing.T) {
 	store := es.NewInMemoryEventStore()
 
 	err := store.Write([]es.Event{
@@ -140,7 +128,7 @@ func (s *EventStoreSuite) TestReturnsErrorWhenAggregateByID() {
 			Version: es.MustParseVersion(2),
 		},
 	})
-	s.NoError(err)
+	require.NoError(t, err)
 
 	err = store.Write([]es.Event{
 		&somethingHappened{
@@ -154,10 +142,10 @@ func (s *EventStoreSuite) TestReturnsErrorWhenAggregateByID() {
 			Version: es.MustParseVersion(3),
 		},
 	})
-	s.EqualError(err, "optimistic lock violation")
+	require.EqualError(t, err, "optimistic lock violation")
 
 	events := store.All()
-	s.Equal(
+	require.Equal(t,
 		[]es.StoredEvent{
 			{
 				Position: 1,
