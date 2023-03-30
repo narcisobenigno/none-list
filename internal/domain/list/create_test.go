@@ -26,11 +26,10 @@ func (s *CreateSuite) TestCreatesList() {
 	store := estest.NewInMemoryEventStore()
 	subject := list.NewBus(store)
 
-	result, err := subject.Execute(&list.Create{
+	result := subject.Execute(&list.Create{
 		ID:   es.NewDeterministicAggregateID("list-id-1"),
 		Name: list.MustParseName("List name 1"),
 	})
-	s.NoError(err)
 
 	s.Equal(results.Success(), result)
 	s.Equal(
@@ -52,11 +51,10 @@ func (s *CreateSuite) TestFailsWhenNameNotProvided() {
 	store := estest.NewInMemoryEventStore()
 	subject := list.NewBus(store)
 
-	result, err := subject.Execute(&list.Create{
+	result := subject.Execute(&list.Create{
 		ID:   es.NewDeterministicAggregateID("list-id-1"),
 		Name: list.Name{},
 	})
-	s.NoError(err)
 
 	s.Equal(results.Failed("List", "name not provided"), result)
 	s.Empty(store.All())

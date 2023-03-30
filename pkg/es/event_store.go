@@ -1,8 +1,8 @@
 package es
 
 type EventStore interface {
-	EventsByAggregateID(aggregateID AggregateID) ([]StoredEvent, error)
-	Write(events []Event) error
+	EventsByAggregateID(aggregateID AggregateID) []StoredEvent
+	Write(events []Event)
 }
 
 type StoredEvent struct {

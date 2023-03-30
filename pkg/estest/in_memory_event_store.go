@@ -1,7 +1,6 @@
 package estest
 
 import (
-	"errors"
 	"sort"
 	"sync"
 
@@ -22,7 +21,7 @@ func NewInMemoryEventStore() *InMemoryEventStore {
 	}
 }
 
-func (i *InMemoryEventStore) EventsByAggregateID(aggregateID es.AggregateID) ([]es.StoredEvent, error) {
+func (i *InMemoryEventStore) EventsByAggregateID(aggregateID es.AggregateID) []es.StoredEvent {
 	aggregateEvents := i.store[aggregateID]
 	storedEvents := []es.StoredEvent{}
 	for _, event := range aggregateEvents {
@@ -32,10 +31,10 @@ func (i *InMemoryEventStore) EventsByAggregateID(aggregateID es.AggregateID) ([]
 		return storedEvents[i].Position < storedEvents[j].Position
 	})
 
-	return storedEvents, nil
+	return storedEvents
 }
 
-func (i *InMemoryEventStore) Write(events []es.Event) error {
+func (i *InMemoryEventStore) Write(events []es.Event) {
 	i.mutex.Lock()
 	defer i.mutex.Unlock()
 
@@ -46,7 +45,7 @@ func (i *InMemoryEventStore) Write(events []es.Event) error {
 			storeCopy[event.AggregateID()] = map[es.Version]es.StoredEvent{}
 		}
 		if _, found := storeCopy[event.AggregateID()][event.AggregateVersion()]; found {
-			return errors.New("optimistic lock violation")
+			panic("optimistic lock violation")
 		}
 
 		storeCopy[event.AggregateID()][event.AggregateVersion()] = es.StoredEvent{
@@ -57,8 +56,6 @@ func (i *InMemoryEventStore) Write(events []es.Event) error {
 	}
 
 	i.store = storeCopy
-
-	return nil
 }
 
 func (i *InMemoryEventStore) storeCopy() map[es.AggregateID]map[es.Version]es.StoredEvent {

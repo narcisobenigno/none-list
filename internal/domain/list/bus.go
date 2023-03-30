@@ -13,15 +13,12 @@ func NewBus(store es.EventStore) *Bus {
 	return &Bus{store: store}
 }
 
-func (b Bus) Execute(cmd es.Cmd) (results.Result, error) {
+func (b Bus) Execute(cmd es.Cmd) results.Result {
 	list := newList()
 
 	events, result := list.handle(cmd)
 
-	err := b.store.Write(events)
-	if err != nil {
-		panic(err)
-	}
+	b.store.Write(events)
 
-	return result, nil
+	return result
 }

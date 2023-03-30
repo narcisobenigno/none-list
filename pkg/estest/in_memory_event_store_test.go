@@ -10,8 +10,7 @@ import (
 
 func TestEventsAggregateByID(t *testing.T) {
 	store := estest.NewInMemoryEventStore()
-
-	err := store.Write([]es.Event{
+	store.Write([]es.Event{
 		&somethingHappened{
 			DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 			What:    "something happened",
@@ -28,10 +27,8 @@ func TestEventsAggregateByID(t *testing.T) {
 			Version: es.MustParseVersion(2),
 		},
 	})
-	require.NoError(t, err)
 
-	events, err := store.EventsByAggregateID(es.NewDeterministicAggregateID("something-happened-1"))
-	require.NoError(t, err)
+	events := store.EventsByAggregateID(es.NewDeterministicAggregateID("something-happened-1"))
 	require.Equal(t,
 		[]es.StoredEvent{
 			{
@@ -57,8 +54,7 @@ func TestEventsAggregateByID(t *testing.T) {
 
 func TestInMemoryReturnsAllEvents(t *testing.T) {
 	store := estest.NewInMemoryEventStore()
-
-	err := store.Write([]es.Event{
+	store.Write([]es.Event{
 		&somethingHappened{
 			DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 			What:    "something happened",
@@ -75,7 +71,6 @@ func TestInMemoryReturnsAllEvents(t *testing.T) {
 			Version: es.MustParseVersion(2),
 		},
 	})
-	require.NoError(t, err)
 
 	events := store.All()
 	require.Equal(t,
@@ -111,8 +106,7 @@ func TestInMemoryReturnsAllEvents(t *testing.T) {
 
 func TestReturnsErrorWhenAggregateByID(t *testing.T) {
 	store := estest.NewInMemoryEventStore()
-
-	err := store.Write([]es.Event{
+	store.Write([]es.Event{
 		&somethingHappened{
 			DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 			What:    "something happened",
@@ -129,21 +123,21 @@ func TestReturnsErrorWhenAggregateByID(t *testing.T) {
 			Version: es.MustParseVersion(2),
 		},
 	})
-	require.NoError(t, err)
 
-	err = store.Write([]es.Event{
-		&somethingHappened{
-			DataID:  es.NewDeterministicAggregateID("something-happened-1"),
-			What:    "existing version",
-			Version: es.MustParseVersion(1),
-		},
-		&somethingHappened{
-			DataID:  es.NewDeterministicAggregateID("something-happened-1"),
-			What:    "non existing, but should be ignored anyway since the other event failed",
-			Version: es.MustParseVersion(3),
-		},
+	require.PanicsWithValue(t, "optimistic lock violation", func() {
+		store.Write([]es.Event{
+			&somethingHappened{
+				DataID:  es.NewDeterministicAggregateID("something-happened-1"),
+				What:    "existing version",
+				Version: es.MustParseVersion(1),
+			},
+			&somethingHappened{
+				DataID:  es.NewDeterministicAggregateID("something-happened-1"),
+				What:    "non existing, but should be ignored anyway since the other event failed",
+				Version: es.MustParseVersion(3),
+			},
+		})
 	})
-	require.EqualError(t, err, "optimistic lock violation")
 
 	events := store.All()
 	require.Equal(t,
