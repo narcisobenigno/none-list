@@ -49,9 +49,9 @@ func TestMust(t *testing.T) {
 func TestTrue(t *testing.T) {
 	t.Run("panics when false", func(t *testing.T) {
 		require.PanicsWithValue(t,
-			"ops not false",
+			"ops false",
 			func() {
-				assert.True(false, "ops not false")
+				assert.True(false, "ops false")
 			},
 		)
 	})
@@ -60,6 +60,25 @@ func TestTrue(t *testing.T) {
 		require.NotPanics(t,
 			func() {
 				assert.True(true, "no panic")
+			},
+		)
+	})
+}
+
+func TestFalse(t *testing.T) {
+	t.Run("panics when true", func(t *testing.T) {
+		require.PanicsWithValue(t,
+			"ops true",
+			func() {
+				assert.False(true, "ops true")
+			},
+		)
+	})
+
+	t.Run("does not panic when false", func(t *testing.T) {
+		require.NotPanics(t,
+			func() {
+				assert.False(false, "no panic")
 			},
 		)
 	})

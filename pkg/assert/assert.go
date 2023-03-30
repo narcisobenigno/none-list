@@ -16,3 +16,7 @@ func True(truthy bool, msg string) {
 		panic(msg)
 	}
 }
+
+func False(falsy bool, msg string) {
+	True(!falsy, msg)
+}
