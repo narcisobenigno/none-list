@@ -19,7 +19,7 @@ func ParseVersion(version uint) (Version, results.Result) {
 func MustParseVersion(version uint) Version {
 	parsedVersion, result := ParseVersion(version)
 
-	assert.True(!result.Failed(), result.Message())
+	assert.False(result.Failed(), result.Message())
 
 	return parsedVersion
 }
