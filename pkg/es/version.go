@@ -9,15 +9,15 @@ type Version struct {
 	version uint
 }
 
-func ParseVersion(version uint) (Version, results.Result) {
+func TryParseVersion(version uint) (Version, results.Result) {
 	if version < 1 {
 		return Version{}, results.Failed("Event", "version should be greater than or equal to 1")
 	}
 	return Version{version: version}, results.Success()
 }
 
-func MustParseVersion(version uint) Version {
-	parsedVersion, result := ParseVersion(version)
+func ParseVersion(version uint) Version {
+	parsedVersion, result := TryParseVersion(version)
 
 	assert.False(result.Failed(), result.Message())
 
@@ -25,5 +25,5 @@ func MustParseVersion(version uint) Version {
 }
 
 func InitialVersion() Version {
-	return MustParseVersion(1)
+	return ParseVersion(1)
 }

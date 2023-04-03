@@ -3,24 +3,24 @@ package results
 import (
 	"fmt"
 
-	"github.com/narcisobenigno/grocery-go/pkg/os/texts"
+	"github.com/narcisobenigno/grocery-go/pkg/os/texts/spacetrimmed"
 )
 
 type Result struct {
-	fails map[texts.SpaceTrimmed]texts.SpaceTrimmed
+	fails map[spacetrimmed.SpaceTrimmed]spacetrimmed.SpaceTrimmed
 }
 
 func Success() Result {
-	return newResult(map[texts.SpaceTrimmed]texts.SpaceTrimmed{})
+	return newResult(map[spacetrimmed.SpaceTrimmed]spacetrimmed.SpaceTrimmed{})
 }
 
 func Failed(context, message string) Result {
-	return newResult(map[texts.SpaceTrimmed]texts.SpaceTrimmed{
-		texts.NewSpaceTrimmed(context): texts.NewSpaceTrimmed(message),
+	return newResult(map[spacetrimmed.SpaceTrimmed]spacetrimmed.SpaceTrimmed{
+		spacetrimmed.New(context): spacetrimmed.New(message),
 	})
 }
 
-func newResult(fails map[texts.SpaceTrimmed]texts.SpaceTrimmed) Result {
+func newResult(fails map[spacetrimmed.SpaceTrimmed]spacetrimmed.SpaceTrimmed) Result {
 	return Result{fails: fails}
 }
 

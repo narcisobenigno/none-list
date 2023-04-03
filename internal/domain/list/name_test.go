@@ -6,68 +6,56 @@ import (
 	"github.com/narcisobenigno/grocery-go/internal/domain/list"
 	"github.com/narcisobenigno/grocery-go/pkg/results"
 	"github.com/stretchr/testify/require"
-	"github.com/stretchr/testify/suite"
 )
 
-type NameSuite struct {
-	*require.Assertions
-	suite.Suite
-}
+func TestTryParse(t *testing.T) {
+	t.Run("different names", func(t *testing.T) {
+		name, err := list.TryParseName("List Name")
+		require.Equal(t, err, results.Success())
 
-func TestNameSuite(t *testing.T) {
-	s := new(NameSuite)
-	s.Assertions = require.New(t)
-	suite.Run(t, s)
-}
+		anotherName, err := list.TryParseName("Another list Name")
+		require.Equal(t, err, results.Success())
 
-func (s *NameSuite) TestParse() {
-	s.Run("different names", func() {
-		name, err := list.ParseName("List Name")
-		s.Equal(err, results.Success())
-
-		anotherName, err := list.ParseName("Another list Name")
-		s.Equal(err, results.Success())
-
-		s.NotEqual(name, anotherName)
+		require.NotEqual(t, name, anotherName)
 	})
 
-	s.Run("equal names", func() {
-		name, result := list.ParseName("List Name")
-		s.Equal(result, results.Success())
+	t.Run("equal names", func(t *testing.T) {
+		name, result := list.TryParseName("List Name")
+		require.Equal(t, result, results.Success())
 
-		sameName, result := list.ParseName(" List Name ")
-		s.Equal(result, results.Success())
+		sameName, result := list.TryParseName(" List Name ")
+		require.Equal(t, result, results.Success())
 
-		s.Equal(name, sameName)
+		require.Equal(t, name, sameName)
 	})
 
-	s.Run("returns error when empty name", func() {
-		_, result := list.ParseName("  ")
-		s.Equal(results.Failed("List", "name cannot be empty"), result)
+	t.Run("returns error when empty name", func(t *testing.T) {
+		_, result := list.TryParseName("  ")
+		require.Equal(t, results.Failed("List", "name cannot be empty"), result)
 	})
 }
 
-func (s *NameSuite) TestMustParse() {
-	s.Run("different names", func() {
-		s.NotEqual(
-			list.MustParseName("List Name"),
-			list.MustParseName("Another list Name"),
+func TestParseName(t *testing.T) {
+	t.Run("different names", func(t *testing.T) {
+		require.NotEqual(t,
+			list.ParseName("List Name"),
+			list.ParseName("Another list Name"),
 		)
 	})
 
-	s.Run("equal names", func() {
-		s.Equal(
-			list.MustParseName("List Name"),
-			list.MustParseName(" List Name "),
+	t.Run("equal names", func(t *testing.T) {
+		require.Equal(t,
+			list.ParseName("List Name"),
+			list.ParseName(" List Name "),
 		)
 	})
 
-	s.PanicsWithValue("List: name cannot be empty", func() {
-		list.MustParseName("  ")
+	require.PanicsWithValue(t, "List: name cannot be empty", func() {
+		list.ParseName("  ")
 	})
 }
 
-func (s *NameSuite) TestProvided() {
-	s.True(list.MustParseName("List name").Provided())
-	s.False(list.Name{}.Provided())
+func TestProvided(t *testing.T) {
+	require.True(t, list.ParseName("List name").Provided())
+	require.False(t, list.Name{}.Provided())
 }

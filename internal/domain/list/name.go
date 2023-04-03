@@ -2,6 +2,7 @@ package list
 
 import (
 	"github.com/narcisobenigno/grocery-go/pkg/os/texts"
+	"github.com/narcisobenigno/grocery-go/pkg/os/texts/spacetrimmed"
 	"github.com/narcisobenigno/grocery-go/pkg/results"
 )
 
@@ -9,8 +10,8 @@ type Name struct {
 	name texts.Text
 }
 
-func ParseName(name string) (Name, results.Result) {
-	trimmedName := texts.NewSpaceTrimmed(name)
+func TryParseName(name string) (Name, results.Result) {
+	trimmedName := spacetrimmed.New(name)
 	if trimmedName.Empty() {
 		return Name{}, results.Failed("List", "name cannot be empty")
 	}
@@ -18,8 +19,8 @@ func ParseName(name string) (Name, results.Result) {
 	return Name{name: trimmedName}, results.Success()
 }
 
-func MustParseName(name string) Name {
-	parsed, result := ParseName(name)
+func ParseName(name string) Name {
+	parsed, result := TryParseName(name)
 	if result.Failed() {
 		panic(result.Message())
 	}

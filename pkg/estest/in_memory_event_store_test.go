@@ -14,17 +14,17 @@ func TestEventsAggregateByID(t *testing.T) {
 		&somethingHappened{
 			DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 			What:    "something happened",
-			Version: es.MustParseVersion(1),
+			Version: es.ParseVersion(1),
 		},
 		&somethingHappened{
 			DataID:  es.NewDeterministicAggregateID("something-happened-2"),
 			What:    "something happened 2",
-			Version: es.MustParseVersion(1),
+			Version: es.ParseVersion(1),
 		},
 		&somethingHappened{
 			DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 			What:    "something happened again",
-			Version: es.MustParseVersion(2),
+			Version: es.ParseVersion(2),
 		},
 	})
 
@@ -36,7 +36,7 @@ func TestEventsAggregateByID(t *testing.T) {
 				Event: &somethingHappened{
 					DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 					What:    "something happened",
-					Version: es.MustParseVersion(1),
+					Version: es.ParseVersion(1),
 				},
 			},
 			{
@@ -44,7 +44,7 @@ func TestEventsAggregateByID(t *testing.T) {
 				Event: &somethingHappened{
 					DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 					What:    "something happened again",
-					Version: es.MustParseVersion(2),
+					Version: es.ParseVersion(2),
 				},
 			},
 		},
@@ -58,17 +58,17 @@ func TestInMemoryReturnsAllEvents(t *testing.T) {
 		&somethingHappened{
 			DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 			What:    "something happened",
-			Version: es.MustParseVersion(1),
+			Version: es.ParseVersion(1),
 		},
 		&somethingHappened{
 			DataID:  es.NewDeterministicAggregateID("something-happened-2"),
 			What:    "something happened 2",
-			Version: es.MustParseVersion(1),
+			Version: es.ParseVersion(1),
 		},
 		&somethingHappened{
 			DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 			What:    "something happened again",
-			Version: es.MustParseVersion(2),
+			Version: es.ParseVersion(2),
 		},
 	})
 
@@ -80,7 +80,7 @@ func TestInMemoryReturnsAllEvents(t *testing.T) {
 				Event: &somethingHappened{
 					DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 					What:    "something happened",
-					Version: es.MustParseVersion(1),
+					Version: es.ParseVersion(1),
 				},
 			},
 			{
@@ -88,7 +88,7 @@ func TestInMemoryReturnsAllEvents(t *testing.T) {
 				Event: &somethingHappened{
 					DataID:  es.NewDeterministicAggregateID("something-happened-2"),
 					What:    "something happened 2",
-					Version: es.MustParseVersion(1),
+					Version: es.ParseVersion(1),
 				},
 			},
 			{
@@ -96,7 +96,7 @@ func TestInMemoryReturnsAllEvents(t *testing.T) {
 				Event: &somethingHappened{
 					DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 					What:    "something happened again",
-					Version: es.MustParseVersion(2),
+					Version: es.ParseVersion(2),
 				},
 			},
 		},
@@ -110,17 +110,17 @@ func TestReturnsErrorWhenAggregateByID(t *testing.T) {
 		&somethingHappened{
 			DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 			What:    "something happened",
-			Version: es.MustParseVersion(1),
+			Version: es.ParseVersion(1),
 		},
 		&somethingHappened{
 			DataID:  es.NewDeterministicAggregateID("something-happened-2"),
 			What:    "something happened 2",
-			Version: es.MustParseVersion(1),
+			Version: es.ParseVersion(1),
 		},
 		&somethingHappened{
 			DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 			What:    "something happened again",
-			Version: es.MustParseVersion(2),
+			Version: es.ParseVersion(2),
 		},
 	})
 
@@ -129,12 +129,12 @@ func TestReturnsErrorWhenAggregateByID(t *testing.T) {
 			&somethingHappened{
 				DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 				What:    "existing version",
-				Version: es.MustParseVersion(1),
+				Version: es.ParseVersion(1),
 			},
 			&somethingHappened{
 				DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 				What:    "non existing, but should be ignored anyway since the other event failed",
-				Version: es.MustParseVersion(3),
+				Version: es.ParseVersion(3),
 			},
 		})
 	})
@@ -147,7 +147,7 @@ func TestReturnsErrorWhenAggregateByID(t *testing.T) {
 				Event: &somethingHappened{
 					DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 					What:    "something happened",
-					Version: es.MustParseVersion(1),
+					Version: es.ParseVersion(1),
 				},
 			},
 			{
@@ -155,7 +155,7 @@ func TestReturnsErrorWhenAggregateByID(t *testing.T) {
 				Event: &somethingHappened{
 					DataID:  es.NewDeterministicAggregateID("something-happened-2"),
 					What:    "something happened 2",
-					Version: es.MustParseVersion(1),
+					Version: es.ParseVersion(1),
 				},
 			},
 			{
@@ -163,7 +163,7 @@ func TestReturnsErrorWhenAggregateByID(t *testing.T) {
 				Event: &somethingHappened{
 					DataID:  es.NewDeterministicAggregateID("something-happened-1"),
 					What:    "something happened again",
-					Version: es.MustParseVersion(2),
+					Version: es.ParseVersion(2),
 				},
 			},
 		},

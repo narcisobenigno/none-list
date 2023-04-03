@@ -6,73 +6,63 @@ import (
 	"github.com/narcisobenigno/grocery-go/pkg/es"
 	"github.com/narcisobenigno/grocery-go/pkg/results"
 	"github.com/stretchr/testify/require"
-	"github.com/stretchr/testify/suite"
 )
 
-type VersionSuite struct {
-	*require.Assertions
-	suite.Suite
-}
+func TestTryParseVersion(t *testing.T) {
+	t.Run("equality fails when different versions", func(t *testing.T) {
+		version, result := es.TryParseVersion(2)
+		require.Equal(t, results.Success(), result)
 
-func TestVersionSuite(t *testing.T) {
-	s := new(VersionSuite)
-	s.Assertions = require.New(t)
-	suite.Run(t, s)
-}
+		otherVersion, result := es.TryParseVersion(3)
+		require.Equal(t, results.Success(), result)
 
-func (s *VersionSuite) TestParse() {
-	s.Run("equality fails when different versions", func() {
-		version, result := es.ParseVersion(2)
-		s.Equal(results.Success(), result)
-
-		otherVersion, result := es.ParseVersion(3)
-		s.Equal(results.Success(), result)
-
-		s.NotEqual(version, otherVersion)
+		require.NotEqual(t, version, otherVersion)
 	})
 
-	s.Run("equality matches when same version", func() {
-		version, result := es.ParseVersion(2)
-		s.Equal(results.Success(), result)
+	t.Run("equality matches when same version", func(t *testing.T) {
+		version, result := es.TryParseVersion(2)
+		require.Equal(t, results.Success(), result)
 
-		sameVersion, result := es.ParseVersion(2)
-		s.Equal(results.Success(), result)
+		sameVersion, result := es.TryParseVersion(2)
+		require.Equal(t, results.Success(), result)
 
-		s.Equal(version, sameVersion)
+		require.Equal(t, version, sameVersion)
 	})
 
-	s.Run("rejects when not acceptable version", func() {
-		_, result := es.ParseVersion(0)
-		s.Equal(
+	t.Run("rejects when not acceptable version", func(t *testing.T) {
+		_, result := es.TryParseVersion(0)
+		require.Equal(t,
 			results.Failed("Event", "version should be greater than or equal to 1"),
 			result,
 		)
 	})
 }
 
-func (s *VersionSuite) TestMustParse() {
-	s.Run("equality fails when different versions", func() {
-		s.NotEqual(
-			es.MustParseVersion(2),
-			es.MustParseVersion(3),
+func TestMustParseVersion(t *testing.T) {
+	t.Run("equality fails when different versions", func(t *testing.T) {
+		require.NotEqual(t,
+			es.ParseVersion(2),
+			es.ParseVersion(3),
 		)
 	})
 
-	s.Run("equality matches when same version", func() {
-		s.Equal(
-			es.MustParseVersion(2),
-			es.MustParseVersion(2),
+	t.Run("equality matches when same version", func(t *testing.T) {
+		require.Equal(t,
+			es.ParseVersion(2),
+			es.ParseVersion(2),
 		)
 	})
 
-	s.PanicsWithValue("Event: version should be greater than or equal to 1", func() {
-		es.MustParseVersion(0)
+	t.Run("panics when versions is smaller or equal zero", func(t *testing.T) {
+		require.PanicsWithValue(t, "Event: version should be greater than or equal to 1", func() {
+			es.ParseVersion(0)
+		})
 	})
 }
 
-func (s *VersionSuite) TestInitialVersion() {
-	s.Equal(
-		es.MustParseVersion(1),
+func TestInitialVersion(t *testing.T) {
+	require.Equal(t,
+		es.ParseVersion(1),
 		es.InitialVersion(),
 	)
 }

@@ -8,38 +8,26 @@ import (
 	"github.com/narcisobenigno/grocery-go/pkg/estest"
 	"github.com/narcisobenigno/grocery-go/pkg/results"
 	"github.com/stretchr/testify/require"
-	"github.com/stretchr/testify/suite"
 )
 
-type CreateSuite struct {
-	*require.Assertions
-	suite.Suite
-}
-
-func TestProductSuite(t *testing.T) {
-	s := &CreateSuite{}
-	s.Assertions = require.New(t)
-	suite.Run(t, s)
-}
-
-func (s *CreateSuite) TestCreatesList() {
+func TestCreatesList(t *testing.T) {
 	store := estest.NewInMemoryEventStore()
 	subject := list.NewBus(store)
 
 	result := subject.Execute(&list.Create{
 		ID:   es.NewDeterministicAggregateID("list-id-1"),
-		Name: list.MustParseName("List name 1"),
+		Name: list.ParseName("List name 1"),
 	})
 
-	s.Equal(results.Success(), result)
-	s.Equal(
+	require.Equal(t, results.Success(), result)
+	require.Equal(t,
 		[]es.StoredEvent{
 			{
 				Position: 1,
 				Event: &list.Created{
 					ID:      es.NewDeterministicAggregateID("list-id-1"),
-					Name:    list.MustParseName("List name 1"),
-					Version: es.MustParseVersion(1),
+					Name:    list.ParseName("List name 1"),
+					Version: es.ParseVersion(1),
 				},
 			},
 		},
@@ -47,7 +35,7 @@ func (s *CreateSuite) TestCreatesList() {
 	)
 }
 
-func (s *CreateSuite) TestFailsWhenNameNotProvided() {
+func TestFailsWhenNameNotProvided(t *testing.T) {
 	store := estest.NewInMemoryEventStore()
 	subject := list.NewBus(store)
 
@@ -56,6 +44,6 @@ func (s *CreateSuite) TestFailsWhenNameNotProvided() {
 		Name: list.Name{},
 	})
 
-	s.Equal(results.Failed("List", "name not provided"), result)
-	s.Empty(store.All())
+	require.Equal(t, results.Failed("List", "name not provided"), result)
+	require.Empty(t, store.All())
 }
